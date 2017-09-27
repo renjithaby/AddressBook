@@ -12,12 +12,12 @@ class HomePage extends React.Component {
 
     componentWillMount(props){
         console.log(this.props.user);
-        console.log(this.props.user.contacts);
+        console.log(this.props.user);
     }
 
     componentWillReceiveProps(nextProps){
         console.log(this.props.user);
-        console.log(this.props.user.contacts);
+        console.log(this.props.user);
     }
 
 

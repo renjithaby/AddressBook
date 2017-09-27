@@ -72,6 +72,7 @@ router.post('/addcontact',function (req, res) {
         var db = req.db;
         var userId = req.body.userid;
         var newContact = {};
+        newContact._id = Date.now();
         newContact.name = req.body.name;
         newContact.address = req.body.address;
         newContact.email = req.body.email;

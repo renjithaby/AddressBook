@@ -92,6 +92,52 @@ class dataApi {
 
     }
 
+    static updateContact(data) {
+
+        let formData = new FormData();
+        // console.log(this.state.file);
+        formData.append('profilePic',data.profilePicFile?data.profilePicFile:null);
+        formData.append('userid',data.userId);
+        formData.append('name',data.contact.name);
+        formData.append('address',data.contact.address);
+        formData.append('email',data.contact.email);
+        formData.append('mobile',data.contact.mobile);
+        console.log(formData.getAll('profilePic'));
+        const request = new Request(apiHost+'user/addcontact',{
+            method: 'POST',
+            headers: new Headers({
+                'x-access-token': sessionStorage.jwt
+            }),
+            body: formData
+        });
+
+        return fetch(request).then(response => {
+            return response.json();
+        }).catch(error => {
+            return error;
+        });
+
+    }
+
+    static deleteContact(contactId) {
+
+        const request = new Request(apiHost+'user/addcontact',{
+            method: 'POST',
+            headers: new Headers({
+                'x-access-token': sessionStorage.jwt
+            }),
+            body: contactId
+        });
+
+        return fetch(request).then(response => {
+            return response.json();
+        }).catch(error => {
+            return error;
+        });
+
+    }
+
+
 
 
 

@@ -3,7 +3,9 @@
  */
 
 import React from 'react';
+import history from '../../History';
 export const apiHost = "http://localhost:3000/";
+
 
 class ContactItem extends React.Component {
 
@@ -14,9 +16,13 @@ class ContactItem extends React.Component {
 
     }
 
+    showContact(e){
+        history.push('/contact/'+this.props.item._id);
+    }
+
     render() {
         return (
-            <div className="panel panel-default">
+            <div onClick = {this.showContact.bind(this)} className="panel panel-default">
 
                 <div className="panel-heading">
                     <a> {this.props.item.name} </a>

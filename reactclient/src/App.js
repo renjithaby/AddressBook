@@ -6,6 +6,7 @@ import SignUpPage  from './Components/SignUp/SignUpPage';
 import SignInPage from './Components/SignIn/SignInPage';
 import HomePage from './Components/Home/HomePage';
 import AddContactPage  from './Components/AddContact/AddContactPage';
+import ContactDetailPage from './Components/ContactDetail/ContactDetailPage';
 import * as Actions from  "./Actions/Action";
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route ,Switch,Redirect, Link, hashHistory,browserHistory } from 'react-router-dom';
@@ -28,7 +29,8 @@ class App extends Component {
           <Switch>
           <Route path = "/signup"  component = {()=>  <SignUpPage  registerUser = {this.props.registerUser}  />} />
           <Route path = "/signin"  component = {()=>  <SignInPage  loginUser = {this.props.loginUser} />} />
-          <Route path = "/addcontact"  component = {()=>  <AddContactPage user= {this.props.userData.user}  addNewContact = {this.props.addNewContact} />} />
+          <Route path = "/contact/:id"  component = {()=>  <ContactDetailPage  user = {this.props.userData.user} updateContact = {this.props.updateContact} deleteContact = {this.props.deleteContact} {...this.props} />} />
+          <Route path = "/addcontact"  component = {()=>  <AddContactPage user= {this.props.userData.user}  addNewContact = {this.props.addNewContact}   />} />
           <Route path ="/home" component ={()=> <HomePage  user= {this.props.userData.user}/>} />
 
           <Route component={() => <HomePage/>}/>
@@ -62,6 +64,12 @@ const mapDispatchToProps = dispatch => {
         },
         addNewContact: formData =>{
             dispatch(Actions.addNewContact(formData));
+        },
+        updateContact: formData =>{
+            dispatch(Actions.updateContact(formData));
+        },
+        deleteContact: contactId =>{
+            dispatch(Actions.deleteContact(contactId));
         }
 
 

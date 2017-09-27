@@ -64,6 +64,35 @@ export const addNewContactFailed = (data) => {
     };
 }
 
+export const updateContactSuccess = (data) => {
+    return {
+        type: "UPDATE_CONTACT_SUCCESS",
+        data: data
+    };
+}
+
+export const updateContactFailed = (data) => {
+    return {
+        type: "UPDATE_CONTACT_FAILED",
+        data:data
+    };
+}
+
+export const deleteContactSuccess = (data) => {
+    return {
+        type: "DELETE_CONTACT_SUCCESS",
+        data: data
+    };
+}
+
+export const deleteContactFailed = (data) => {
+    return {
+        type: "DELETE_CONTACT_FAILED",
+        data:data
+    };
+}
+
+
 
 export function loginUser(usr) {
     return function(dispatch) {
@@ -128,6 +157,41 @@ export function addNewContact(formData) {
             }else {
                 //resultData.user = data.user;
                 dispatch(addNewContactSuccess({user:data}));
+
+            }
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
+
+export function updateContact(formData) {
+    return function(dispatch) {
+        var resultData = {};
+        return dataApi.updateContact(formData).then(data => {
+            if(data.result === "failed"){
+                dispatch(updateContactFailed(data));
+            }else {
+                //resultData.user = data.user;
+                dispatch(updateContactSuccess({user:data}));
+
+            }
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
+
+
+export function deleteContact(contactId) {
+    return function(dispatch) {
+        var resultData = {};
+        return dataApi.deleteContact(contactId).then(data => {
+            if(data.result === "failed"){
+                dispatch(deleteContactFailed(data));
+            }else {
+                //resultData.user = data.user;
+                dispatch(deleteContactSuccess({user:data}));
 
             }
         }).catch(error => {

@@ -5,6 +5,7 @@ import Header from './Components/Header/Header';
 import SignUpPage  from './Components/SignUp/SignUpPage';
 import SignInPage from './Components/SignIn/SignInPage';
 import HomePage from './Components/Home/HomePage';
+import AddContactPage  from './Components/AddContact/AddContactPage';
 import * as Actions from  "./Actions/Action";
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route ,Switch,Redirect, Link, hashHistory,browserHistory } from 'react-router-dom';
@@ -14,9 +15,9 @@ class App extends Component {
 
     componentWillMount(props){
 
-       /* if(sessionStorage.jwt) {
+       if(sessionStorage.jwt) {
             this.props.loadUserFromToken(sessionStorage.jwt);
-        }*/
+       }
     }
 
   render() {
@@ -27,7 +28,8 @@ class App extends Component {
           <Switch>
           <Route path = "/signup"  component = {()=>  <SignUpPage  registerUser = {this.props.registerUser}  />} />
           <Route path = "/signin"  component = {()=>  <SignInPage  loginUser = {this.props.loginUser} />} />
-          <Route path ="/home" component ={()=> <HomePage/>} />
+          <Route path = "/addcontact"  component = {()=>  <AddContactPage user= {this.props.userData.user}  addNewContact = {this.props.addNewContact} />} />
+          <Route path ="/home" component ={()=> <HomePage  user= {this.props.userData.user}/>} />
 
           <Route component={() => <HomePage/>}/>
           </Switch>
@@ -52,12 +54,14 @@ const mapDispatchToProps = dispatch => {
         loginUser: user => {
             dispatch(Actions.loginUser(user));
         },
-       /* loadUserFromToken : token =>{
+       loadUserFromToken : token =>{
             dispatch(Actions.loadUserFromToken(token));
-        },*/
-
+        },
         handleLogout :()=>{
             dispatch(Actions.handleLogout());
+        },
+        addNewContact: formData =>{
+            dispatch(Actions.addNewContact(formData));
         }
 
 

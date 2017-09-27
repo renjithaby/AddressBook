@@ -39,10 +39,20 @@ const LoggedOutView = props => {
 
 const LoggedInView = props => {
         return (
-            <div>
+            <div className ="pull-xs-right">
 
-                <ul className="nav navbar-nav pull-xs-right">
 
+
+
+
+                <ul className="nav navbar-nav ">
+                    <li>
+                        <form>
+                            <div className="form-group">
+                                <input className="form-control"  value={props.search} onChange={props.handleSearchChange.bind(this)}/>
+                            </div>
+                        </form>
+                    </li>
                     <li className={props.pathname ==="/home"?"nav-item active":"nav-item inactive"}>
                         <Link to="/home" className="nav-link">
                             Home
@@ -64,33 +74,49 @@ const LoggedInView = props => {
 
                 </ul>
 
-            </div>
+                </div>
+
         );
 };
 
 class Header extends React.Component {
 
+    constructor(props){
+        super(props);
+        this.state = {search :"search"};
+    }
+
+
+    handleSearchChange(event){
+        this.setState({search: event.target.value});
+    }
 
     handleLogout(){
-
         this.props.handleLogout();
     }
 
 
     render() {
         return (
-            <nav className="navbar navbar-light">
+            <nav className="navbar navbar-light header-comp">
                 <div className="container">
 
-                    <Link to="/" className="navbar-brand">
-                        {this.props.appName}
-                    </Link>
+                    <ul className="nav navbar-nav ">
+                    <li>
+                        <Link className= "pull-xs-left" to="/">
+                            ADDRESS BOOK
+                        </Link>
+                    </li>
+                    </ul>
 
                 {!this.props.currentUser._id? <LoggedOutView currentUser={this.props.currentUser} appName ={this.props.appName} pathname={this.props.location?this.props.location.pathname:""}/>:null}
-                {this.props.currentUser._id? <LoggedInView  location={this.props.location}
-                    currentUser={this.props.currentUser}
-                    handleLogout ={this.handleLogout.bind(this)}
-                    appName ={this.props.appName}/>:null}
+                {this.props.currentUser._id? <LoggedInView
+                    search = {this.state.search}
+                    pathname={this.props.location?this.props.location.pathname:""}
+                    currentUser = {this.props.currentUser}
+                    handleLogout =  {this.handleLogout.bind(this)}
+                    handleSearchChange = {this.handleSearchChange.bind(this)}
+                    appName = {this.props.appName}/>:null}
 
                 </div>
             </nav>

@@ -23,7 +23,7 @@ ReactDOM.render(
 	            <Route   path="/home" component={AppContainer}/>
 	            <Route   path="/signin" component={AppContainer}/>
 	            <Route   path="/signup" component={AppContainer}/>
-	            <Route   path="/addaddress" component={AppContainer}/>
+	            <Route   path="/addcontact" component={AppContainer}/>
 	            <Route   path="/editaddress/:id" component={AppContainer}/>
 	            <Route   path="/contact/:id" component={AppContainer}/>
 	            <Route component={() => <AppContainer/>}/>

@@ -35,7 +35,7 @@ class SignInPage extends React.Component {
     render() {
         return (
             <div className =" form-block ">
-                <form  onSubmit = {this.handleSignIn.bind(this)}>
+                <form  onSubmit = {this.handleSignIn.bind(this)} enctype="multipart/form-data">
                     <div className="form-group">
                         <label> User Name </label>
                         <input className="form-control"  value={this.state.username} onChange={this.handleUserNameChange.bind(this)}/>

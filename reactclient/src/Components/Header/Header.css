@@ -11,3 +11,23 @@
     margin-left:auto;
     margin-right:auto;
 }
+
+.header-comp{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+.nav .active {
+    background-color: #eee;
+    color:#23527c;
+}
+
+@media (max-width: 768px){
+
+    .pull-xs-right{
+        float :none;
+    }
+
+    .pull-xs-left{
+        float :none;
+    }
+}

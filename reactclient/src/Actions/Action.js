@@ -43,6 +43,27 @@ export const handleLogout = (data) => {
     };
 }
 
+export const loadUserFromTokenSuccess = (data) => {
+    return {
+        type: "LOAD_USER_TOKEN_SUCCESS",
+        data: data
+    };
+}
+
+export const addNewContactSuccess = (data) => {
+    return {
+        type: "ADD_CONTACT_SUCCESS",
+        data: data
+    };
+}
+
+export const addNewContactFailed = (data) => {
+    return {
+        type: "ADD_CONTACT_FAILED",
+        data:data
+    };
+}
+
 
 export function loginUser(usr) {
     return function(dispatch) {
@@ -79,6 +100,42 @@ export function registerUser(usr) {
         });
     };
 }
+
+export function loadUserFromToken(token) {
+    return function(dispatch) {
+        var resultData = {};
+        return dataApi.loadUserFromToken(token).then(data => {
+            if(data.result === "failed"){
+                dispatch(handleLogout());
+            }else {
+                resultData.user = data.user;
+                dispatch(loadUserFromTokenSuccess(resultData));
+
+            }
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
+
+
+export function addNewContact(formData) {
+    return function(dispatch) {
+        var resultData = {};
+        return dataApi.addNewContact(formData).then(data => {
+            if(data.result === "failed"){
+                dispatch(addNewContactFailed(data));
+            }else {
+                //resultData.user = data.user;
+                dispatch(addNewContactSuccess({user:data}));
+
+            }
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
+
 
 
 

@@ -1,7 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var jwt    = require('jsonwebtoken');
+var multer = require('multer');
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/uploads')
+    },
+    filename: function (req, file, cb) {
+        console.log(file);
+        if(file) {
+            cb(null, file.fieldname + '-' + Date.now()+file.mimetype.replace("image/","."))
+        }else{
+
+        }
+        //
+    }
+});
+
+//var upload = multer({ dest: './public/uploads' });
+
+var upload = multer({ storage:storage }).single('profilePic');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   var app = req.app;
@@ -41,57 +60,61 @@ router.post('/removeuser', function (req, res) {
 });
 
 
-router.post('/addaddress', function (req, res) {
+router.post('/addcontact',function (req, res) {
+    upload(req, res, function (err) {
+        if (err) {
+            console.log("errorr is thrown");
+            return
+        }
 
-    // Set our internal DB variable
-    var db = req.db;
+        console.log(req.file);
+        // Set our internal DB variable
+        var db = req.db;
+        var userId = req.body.userid;
+        var newContact = {};
+        newContact.name = req.body.name;
+        newContact.address = req.body.address;
+        newContact.email = req.body.email;
+        newContact.mobile = req.body.mobile;
+        newContact.profilePicUrl = req.file ? req.file.path.replace("public","") : "/uploads/default.png";
 
-    // Get our form values. These rely on the "name" attributes
-    var addressId = Date.now();
-    var name = req.body.name;
-    var currentAddress = req.body.currentaddress;
-    var newAddress = { "name": name, "currentAddress": currentAddress};
-    console.log("id...........");
-    console.log(id);
-    // Set our collection
-    var collection = db.get('usercollection');
+        // Set our collection
+         var collection = db.get('usercollection');
 
 
-    collection.update(
-        {_id: id},
-        {$push: {addressList: newAddress}}
-        , function (err, doc) {
-            if (err) {
-                console.log("failed.....");
-                // If it failed, return error
-                res.send({result :"failed",detail:"There was a problem adding the information to the database."});
+         collection.update(
+            {_id: userId},
+            {$push: {contacts: newContact}}
+         , function (err, doc) {
+             if (err) {
+                 console.log("failed.....");
+                 // If it failed, return error
+                 res.send({result :"failed",detail:"There was a problem adding the information to the database."});
+             }
+             else {
+                 collection.find({
+                 "_id" : userId
+                 },
+                 function (err, doc) {
+                     if (err) {
+                         console.log("doceroor");
+                         // If it failed, return error
+                         res.send({result: "failed", detail:"Incorrect information."});
+                     }
+                     else {
+                         console.log(".....response....");
+                         if (doc.length > 0) {
+                            res.send(doc[0]);
+                            //res.redirect("addaddress");
+                         } else {
+                            res.send({result: "failed", detail:"wrong id"});
+                         }
+                     }
+                 });
             }
-            else {
+         });
 
-                console.log("doc[0]..........");
-                console.log(doc);
-                collection.find({
-                        "_id" : id
-                    },
-                    function (err, doc) {
-                        if (err) {
-                            console.log("doceroor");
-                            // If it failed, return error
-                            res.send({result: "failed", detail:"Incorrect information."});
-                        }
-                        else {
-                            console.log(".....response....");
-                            if (doc.length > 0) {
-                                res.send(doc[0]);
-                                //res.redirect("addaddress");
-                            } else {
-                                res.send({result: "failed", detail:"wrong id"});
-                            }
-                        }
-                    });
-            }
-        });
-
+    });
 
 });
 
@@ -217,7 +240,28 @@ router.post('/removeaddress', function (req, res) {
             }
         });
 
+});
 
+
+
+router.post('/loadUserFromToken', function (req, res) {
+    var db = req.db;
+
+    var userId = req.decoded._id;
+    var collection = db.get('usercollection');
+
+
+    collection.find({_id:userId}, {limit:5, sort:{time:-1}}, function (err, docs) {
+
+        if (err) {
+            // If it failed, return error
+            res.send({result: "failed", message: "There was a problem adding the information to the database."});
+        }
+        else {
+
+            res.send({result: "success", user: docs[0]});
+        }
+    });
 });
 
 

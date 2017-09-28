@@ -4,6 +4,7 @@
 
 import React from 'react';
 import history from '../../History';
+import './ContactItem.css';
 export const apiHost = "http://localhost:3000/";
 
 
@@ -22,16 +23,14 @@ class ContactItem extends React.Component {
 
     render() {
         return (
-            <div onClick = {this.showContact.bind(this)} className="panel panel-default">
-
-                <div className="panel-heading">
-                    <a> {this.props.item.name} </a>
+                <div onClick = {this.showContact.bind(this)} className="contact-item col-xs-12 col-sm-6 ">
+                    <div className="panel panel-default" >
+                        <div className="panel-body image-block">
+                            <img  src = {apiHost + this.props.item.profilePicUrl} />
+                            <span className="name"> {this.props.item.name} </span>
+                        </div>
+                    </div>
                 </div>
-                <div className="panel-body image-block">
-                    <img  src = {apiHost + this.props.item.profilePicUrl} />
-                </div>
-
-            </div>
         );
     }
 }

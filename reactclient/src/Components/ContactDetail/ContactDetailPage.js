@@ -35,26 +35,39 @@ class ContactDetailPage extends React.Component {
 
     render() {
         return (
-            <div className="container">
-                <p> contact detail page</p>
-                <div>
-                    <p> {this.state.contact.name} </p>
-                </div>
+            <div className="contact-detail container">
+
                 <div className="panel-body image-block">
                     <img  src = {apiHost + this.state.contact.profilePicUrl} />
                 </div>
-                <div >
-                        <p> {this.state.contact.address} </p>
-                </div>
-                <div>
-                    <p> {this.state.contact.email} </p>
-                </div>
-                <div>
-                    <p> {this.state.contact.mobile} </p>
+
+                <div className="field">
+                    <span className="title"> name </span>
+                    <hr/>
+                    <span> {this.state.contact.name} </span>
                 </div>
 
-                <button className="btn-green" onClick = {this.handleEditContact.bind(this)}> edit </button>
-                <button className="btn-red" onClick = {this.handleDeleteContact.bind(this)}> delete </button>
+                <div className="field">
+                    <span className="title"> address </span>
+                    <hr/>
+                    <span> {this.state.contact.address} </span>
+                </div>
+
+                <div className="field">
+                    <span className="title"> email </span>
+                    <hr/>
+                    <p> {this.state.contact.email} </p>
+                </div>
+
+                <div className="field">
+                    <span className="title"> mobile </span>
+                    <hr/>
+                    <p> {this.state.contact.mobile} </p>
+                </div>
+                <div className = "btns">
+                    <button className="btn-green btn-edit" onClick = {this.handleEditContact.bind(this)}> edit </button>
+                    <button className="btn-green btn-delete" onClick = {this.handleDeleteContact.bind(this)}> delete </button>
+                </div>
             </div>
         );
     }

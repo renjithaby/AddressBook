@@ -1,4 +1,9 @@
-.image-block img{
-    max-width:50px;
-    max-height:50px;
+.home-page ul{
+    list-style-type: none;
+}
+
+
+.image-block img {
+    max-width: 50px;
+    max-height: 50 px;
 }

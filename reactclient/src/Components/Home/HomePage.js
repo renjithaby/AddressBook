@@ -4,6 +4,7 @@
 
 import React from 'react';
 import ContactItem  from '../ContactItem/ContactItem';
+import './Home.css';
 class HomePage extends React.Component {
 
     constructor(props){
@@ -23,12 +24,11 @@ class HomePage extends React.Component {
 
     render() {
         return (
-	            <div className="container">
-	               <p> home page</p>
+	            <div className="home-page container">
                 {this.props.user.contacts ?
-                    <ul>
+                    <ul className="row">
                         {this.props.user.contacts.map((item) =>
-                                <li key={item._id}>
+                                <li key={item.id} >
                                     <ContactItem  item ={item}/>
                                 </li>
                         )}

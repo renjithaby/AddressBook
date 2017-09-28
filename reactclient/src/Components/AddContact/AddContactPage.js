@@ -127,8 +127,6 @@ class AddContactPage extends React.Component {
         return (
             <div  className ="add-contact form-block ">
 
-                <h1> Add Contact </h1>
-
                 <div className = "form-group profile-image">
                     <label> Image </label>
                     <div>

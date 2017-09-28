@@ -35,7 +35,7 @@ class App extends Component {
           <Route path = "/addcontact"  component = {()=>  <AddContactPage user= {this.props.userData.user}  addNewContact = {this.props.addNewContact}   />} />
           <Route path ="/home" component ={()=> <HomePage  user= {this.props.userData.user}/>} />
 
-          <Route component={() => <HomePage/>}/>
+          <Route component={() => <HomePage user= {this.props.userData.user}/>}/>
           </Switch>
       </div>
     );

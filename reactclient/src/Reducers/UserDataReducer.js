@@ -34,7 +34,17 @@ const UserDataReducer = (state = { user:{}}, action = {}) => {
         case "ADD_CONTACT_FAILED" :
             return addContactFailed(state,action);
 
+        case "DELETE_CONTACT_SUCCESS" :
+            return deleteContactSuccess(state,action);
 
+        case "DELETE_CONTACT_FAILED" :
+            return deleteContactFailed(state,action);
+
+        case "UPDATE_CONTACT_SUCCESS":
+            return updateContactSuccess(state,action);
+
+        case "UPDATE_CONTACT_FAILED":
+            return updateContactFailed(state,action);
 
         default:
             return state;
@@ -80,6 +90,24 @@ const UserDataReducer = (state = { user:{}}, action = {}) => {
     }
 
     function addContactFailed(state,action){
+        return state;
+    }
+
+    function deleteContactSuccess(state,action){
+        history.push('/home');
+        return {...state, user : action.data.user  };
+    }
+
+    function deleteContactFailed(state,action){
+        return state;
+    }
+
+    function updateContactSuccess(state,action){
+        //history.push('/home');
+        return {...state, user : action.data.user  };
+    }
+
+    function updateContactFailed(state,action){
         return state;
     }
 

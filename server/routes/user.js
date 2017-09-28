@@ -72,7 +72,7 @@ router.post('/addcontact',function (req, res) {
         var db = req.db;
         var userId = req.body.userid;
         var newContact = {};
-        newContact._id = Date.now();
+        newContact.id = Date.now().toString();
         newContact.name = req.body.name;
         newContact.address = req.body.address;
         newContact.email = req.body.email;
@@ -126,29 +126,37 @@ router.post('/addcontact',function (req, res) {
 )*/
 
 
-router.post('/updateaddress', function (req, res) {
+router.post('/updatecontact', function (req, res) {
 
    // req.body = {loginid:"59a67d114c0b230f4a639548",addressid:1504093882072,name :"renjith", currentaddress:"renjithadd"};
-    // Set our internal DB variable
+    upload(req, res, function (err) {
+        if (err) {
+            console.log("errorr is thrown");
+            return
+        }
+
+
+        // Set our internal DB variable
     var db = req.db;
 
     // Get our form values. These rely on the "name" attributes
-    var id = req.body.loginid;
-    var addressId =req.body.addressid;
-    var name = req.body.name;
-    var currentAddress = req.body.currentaddress;
-    var newAddress = {"id": addressId, "name": name, "currentAddress": currentAddress};
-    console.log("id...........");
-    console.log(id);
-    console.log(addressId);
-    console.log(currentAddress);
+    var userId = req.body.userid;
+    var newContact = {};
+    newContact.id = req.body.contactId;
+    newContact.name = req.body.name;
+    newContact.address = req.body.address;
+    newContact.email = req.body.email;
+    newContact.mobile = req.body.mobile;
+    newContact.profilePicUrl = req.file ? req.file.path.replace("public","") : "/uploads/default.png";
+   console.log("hellooo");
+        console.log(newContact);
     // Set our collection
     var collection = db.get('usercollection');
 
 
     collection.update(
-        {_id: id,"addressList.id":addressId},
-        { $set: { "addressList.$" : newAddress } }
+        {_id: userId,"contacts.id":newContact.id},
+        { $set: { "contacts.$" : newContact } }
        , function (err, doc) {
             if (err) {
                 console.log("failed.....");
@@ -156,11 +164,11 @@ router.post('/updateaddress', function (req, res) {
                 res.send("There was a problem adding the information to the database.");
             }
             else {
-
-                console.log("doc[0]..........");
+                console.log("success.....");
+               console.log("doc[0]..........");
                 console.log(doc);
                 collection.find({
-                        "_id" : id
+                        "_id" : userId
                     },
                     function (err, doc) {
                         if (err) {
@@ -181,7 +189,7 @@ router.post('/updateaddress', function (req, res) {
             }
         });
 
-
+    });
 });
 
 /*
@@ -191,23 +199,23 @@ db.survey.update(
     { multi: true }
 )
 */
-router.post('/removeaddress', function (req, res) {
+router.post('/deletecontact', function (req, res) {
 
     //req.body = {loginid:"59a67d114c0b230f4a639548",addressid:1504093406891};
     // Set our internal DB variable
     var db = req.db;
 
     // Get our form values. These rely on the "name" attributes
-    var id = req.body.loginid;
-    var addressId =req.body.addressid;
+    var userId = req.body.userid;
+    var contactId =req.body.contactid;
 
     // Set our collection
     var collection = db.get('usercollection');
 
 
     collection.update(
-        {_id:id},
-        {$pull:{addressList:{id :addressId}}},
+        {_id:userId},
+        {$pull:{contacts:{id :contactId}}},
         { multi: true }
         , function (err, doc) {
             if (err) {
@@ -216,23 +224,17 @@ router.post('/removeaddress', function (req, res) {
                 res.send("There was a problem adding the information to the database.");
             }
             else {
-
-                console.log("doc[0]..........");
-                console.log(doc);
                 collection.find({
-                        "_id" : id
+                        "_id" : userId
                     },
                     function (err, doc) {
                         if (err) {
-                            console.log("doceroor");
                             // If it failed, return error
                             res.send("Incorrect information.");
                         }
                         else {
-                            console.log(".....response....");
                             if (doc.length > 0) {
                                 res.send(doc[0]);
-                                //res.redirect("addaddress");
                             } else {
                                 res.send({result: "failed"});
                             }

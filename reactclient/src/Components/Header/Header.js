@@ -84,7 +84,17 @@ class Header extends React.Component {
     constructor(props){
         super(props);
         this.state = {search :"search"};
+
     }
+
+    componentWillMount(){
+
+    }
+
+    componentWillReceiveProps(nextprops){
+
+    }
+
 
 
     handleSearchChange(event){

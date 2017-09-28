@@ -15,7 +15,7 @@ class ContactDetailPage extends React.Component {
 
     componentWillMount(props){
         if(this.props.user.contacts) {
-            let contact = this.props.user.contacts.find(o => o._id == this.props.match.params.id);
+            let contact = this.props.user.contacts.find(o => o.id == this.props.match.params.id);
             this.setState({contact: contact});
         }
     }
@@ -24,12 +24,20 @@ class ContactDetailPage extends React.Component {
 
     }
 
+    handleEditContact(e){
+        history.push('/editContact/'+ this.state.contact.id );
+    }
+
+    handleDeleteContact(e){
+        this.props.deleteContact({userId: this.props.user._id, contactId: this.state.contact.id});
+    }
+
 
     render() {
         return (
             <div className="container">
                 <p> contact detail page</p>
-                <div >
+                <div>
                     <p> {this.state.contact.name} </p>
                 </div>
                 <div className="panel-body image-block">
@@ -44,6 +52,9 @@ class ContactDetailPage extends React.Component {
                 <div>
                     <p> {this.state.contact.mobile} </p>
                 </div>
+
+                <button className="btn-green" onClick = {this.handleEditContact.bind(this)}> edit </button>
+                <button className="btn-red" onClick = {this.handleDeleteContact.bind(this)}> delete </button>
             </div>
         );
     }

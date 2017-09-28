@@ -7,6 +7,7 @@ import SignInPage from './Components/SignIn/SignInPage';
 import HomePage from './Components/Home/HomePage';
 import AddContactPage  from './Components/AddContact/AddContactPage';
 import ContactDetailPage from './Components/ContactDetail/ContactDetailPage';
+import EditContactPage from './Components/EditContact/EditContactPage';
 import * as Actions from  "./Actions/Action";
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route ,Switch,Redirect, Link, hashHistory,browserHistory } from 'react-router-dom';
@@ -25,11 +26,12 @@ class App extends Component {
     return (
       <div>
 
-          <Header currentUser = {this.props.userData.user?this.props.userData.user:null} appName= {"Thoughts!"} handleLogout = {this.props.handleLogout.bind(this)} {...this.props}/>
+          <Header currentUser = {this.props.userData.user} appName= {"Thoughts!"} handleLogout = {this.props.handleLogout.bind(this)} {...this.props}/>
           <Switch>
           <Route path = "/signup"  component = {()=>  <SignUpPage  registerUser = {this.props.registerUser}  />} />
           <Route path = "/signin"  component = {()=>  <SignInPage  loginUser = {this.props.loginUser} />} />
-          <Route path = "/contact/:id"  component = {()=>  <ContactDetailPage  user = {this.props.userData.user} updateContact = {this.props.updateContact} deleteContact = {this.props.deleteContact} {...this.props} />} />
+          <Route path = "/contact/:id"  component = {()=>  <ContactDetailPage  user = {this.props.userData.user} deleteContact = {this.props.deleteContact} {...this.props} />} />
+          <Route path = "/editcontact/:id"  component = {()=>  <EditContactPage  user = {this.props.userData.user} updateContact ={this.props.updateContact} {...this.props} />} />
           <Route path = "/addcontact"  component = {()=>  <AddContactPage user= {this.props.userData.user}  addNewContact = {this.props.addNewContact}   />} />
           <Route path ="/home" component ={()=> <HomePage  user= {this.props.userData.user}/>} />
 

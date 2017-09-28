@@ -98,12 +98,13 @@ class dataApi {
         // console.log(this.state.file);
         formData.append('profilePic',data.profilePicFile?data.profilePicFile:null);
         formData.append('userid',data.userId);
+        formData.append('contactId',data.contact.id);
         formData.append('name',data.contact.name);
         formData.append('address',data.contact.address);
         formData.append('email',data.contact.email);
         formData.append('mobile',data.contact.mobile);
         console.log(formData.getAll('profilePic'));
-        const request = new Request(apiHost+'user/addcontact',{
+        const request = new Request(apiHost+'user/updatecontact',{
             method: 'POST',
             headers: new Headers({
                 'x-access-token': sessionStorage.jwt
@@ -119,14 +120,16 @@ class dataApi {
 
     }
 
-    static deleteContact(contactId) {
+    static deleteContact(data) {
 
-        const request = new Request(apiHost+'user/addcontact',{
+
+        const request = new Request(apiHost+'user/deletecontact',{
             method: 'POST',
             headers: new Headers({
+                'Content-Type': 'application/json',
                 'x-access-token': sessionStorage.jwt
             }),
-            body: contactId
+            body: JSON.stringify({userid: data.userId, contactid:data.contactId})
         });
 
         return fetch(request).then(response => {

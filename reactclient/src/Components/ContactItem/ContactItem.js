@@ -17,7 +17,7 @@ class ContactItem extends React.Component {
     }
 
     showContact(e){
-        history.push('/contact/'+this.props.item._id);
+        history.push('/contact/'+this.props.item.id);
     }
 
     render() {

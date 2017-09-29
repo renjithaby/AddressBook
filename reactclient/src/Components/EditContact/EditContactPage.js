@@ -5,14 +5,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './EditContact.css';
-
-export const MAX_FILE_SIZE = 1800000;
+export const apiHost = "http://localhost:3000";
+export const MAX_FILE_SIZE = 23000;
 class EditContactPage extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state ={contact:{_id: "",name:"", address:"", email:"",mobile:"", profilePicUrl:""}};
+        this.state = {
+            contact: {_id: "", name: "", address: "", email: "", mobile: "", profilePicUrl: ""},
+            file: "",
+            imagePreviewUrl: "",
+            fileUploadErrorMessage: "",
+            uploadedImage: "",
+            nameValid: "default",
+            addressValid: "default",
+            emailValid: "default",
+            mobileValid: "default",
+            formValid: false,
+            isDirty:false
+        };
+
+
     }
+
 
     componentWillMount(){
         if(this.props.user.contacts) {
@@ -21,25 +36,94 @@ class EditContactPage extends React.Component {
         }
     }
 
+    isShallowEqual(v, o) {
+            for(var key in v) {
+                if (!(key in o) || v[key] !== o[key])
+                    return false
+
+                for (var key in o)
+                    if (!(key in v) || v[key] !== o[key])
+                        return false
+
+                return true
+            }
+    }
+
+    isDirty(){
+        let isDirty = true;
+        let contact = this.props.user.contacts.find(o => o.id == this.props.match.params.id);
+        isDirty = !this.isShallowEqual(contact, this.state.contact);
+        this.setState({isDirty:isDirty});
+    }
+
+     validator(){
+        let formValid = true;
+        let mobileReg = new RegExp(/^\d+$/);
+        let emailReg = new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+        //name
+        //min 6 characters
+        if(this.state.contact.name.length<6){
+
+            this.setState({nameValid: false});
+            formValid = false;
+        }else{
+            this.setState({nameValid: true});
+        }
+
+        //address
+        //min  6 characters
+        if(this.state.contact.address.length<6){
+
+            this.setState({addressValid: false});
+            formValid = false;
+        }else{
+            this.setState({addressValid: true});
+        }
+
+        //email
+        if(!emailReg.test(this.state.contact.email)){
+            this.setState({emailValid: false});
+            formValid = false;
+        }else{
+            this.setState({emailValid: true});
+        }
+
+        //mobile
+        //min 6 characters
+        if(this.state.contact.mobile.length<6) {
+            this.setState({mobileValid: false});
+            formValid = false;
+        }else if(!mobileReg.test(this.state.contact.mobile)) {
+            this.setState({mobileValid: false});
+            formValid = false;
+        }else{
+            this.setState({mobileValid: true});
+        }
+
+        this.setState({formValid :formValid},this.isDirty);
+
+    }
+
+
 
     handleNameChange(event) {
         let obj =  {...this.state.contact, name : event.target.value};
-        this.setState({contact: obj});
+        this.setState({contact: obj}, this.validator);
     }
 
     handleAddressChange(event) {
         let obj =  {...this.state.contact, address : event.target.value};
-        this.setState({contact : obj});
+        this.setState({contact : obj},this.validator);
     }
 
     handleEmailChange(event) {
         let obj =  {...this.state.contact, email : event.target.value};
-        this.setState({contact : obj});
+        this.setState({contact : obj},this.validator);
     }
 
     handleMobileChange(event) {
         let obj =  {...this.state.contact, mobile : event.target.value};
-        this.setState({contact : obj});
+        this.setState({contact : obj},this.validator);
     }
 
     updateContact(event) {
@@ -51,7 +135,8 @@ class EditContactPage extends React.Component {
     }
 
     handleImageChange(e){
-        e.preventDefault();
+
+         e.preventDefault();
 
         let reader = new FileReader();
         let file = e.target.files[0];
@@ -59,23 +144,22 @@ class EditContactPage extends React.Component {
         reader.onloadend = () => {
             this.setState({
                 file: file,
-                imagePreviewUrl: reader.result
-            });
-        }
-        if(!file){
-            this.setState({
-                file: null,
-                imagePreviewUrl: null
-            });
+                imagePreviewUrl: reader.result,
+                uploadedImage:file.name
+            },this.validator());
         }
         if(file && file.size>MAX_FILE_SIZE){
             file = null;
             reader =null;
-            this.setState({fileUploadMessage : " max file size limit is 10kb"});
+            this.setState({
+                file: "",
+                imagePreviewUrl:"",
+                uploadedImage:"",
+                fileUploadErrorMessage : " max file size limit is " + MAX_FILE_SIZE+"bytes"
+            },this.validator());
         }
         if(file) {
             reader.readAsDataURL(file)
-            //reader.readAstext(file)
         }
 
     }
@@ -85,39 +169,46 @@ class EditContactPage extends React.Component {
     render() {
 
         return (
-            <div className =" form-block ">
-                <h1> Edit Contact </h1>
-                <form id ="add-contact" onSubmit = {this.updateContact.bind(this)} >
-                    <div className="form-group">
+           <div  className ="edit-contact form-block ">
+
+                <div className = "form-group profile-image">
+                    <label> Image </label>
+                    <div>
+                        {this.state.imagePreviewUrl ? <img src= {this.state.imagePreviewUrl} alt="" />:<img  src = {apiHost + this.state.contact.profilePicUrl} />}
+                    </div>
+                    <div>
+                        <span> {this.state.uploadedImage} </span>
+                    </div>
+                    <div>
+                        <span className="error-message"> {this.state.fileUploadErrorMessage} </span>
+                    </div>
+                    <label className="fileContainer">
+                        upload File!
+                        <input type="file" onChange={this.handleImageChange.bind(this)}/>
+                    </label>
+                </div>
+                <form  onSubmit = {this.updateContact.bind(this)} >
+                    <div className={!this.state.nameValid?"form-group has-error":"form-group"}>
                         <label> name </label>
                         <input className="form-control"  value = {this.state.contact.name} onChange = {this.handleNameChange.bind(this)}/>
                     </div>
-                    <div className="form-group">
+                    <div className={!this.state.addressValid?"form-group has-error":"form-group"}>
                         <label> address </label>
                         <textarea className="form-control"  value = {this.state.contact.address} onChange = {this.handleAddressChange.bind(this)}/>
                     </div>
-                    <div className="form-group">
+                    <div className={!this.state.emailValid?"form-group has-error":"form-group"}>
                         <label> email </label>
-                        <input className="form-control"  value = {this.state.contact.email} onChange = {this.handleEmailChange.bind(this)}/>
+                        <input className="form-control" type= "email" value = {this.state.contact.email} onChange = {this.handleEmailChange.bind(this)}/>
                     </div>
 
-                    <div className="form-group">
+                    <div className={!this.state.mobileValid?"form-group has-error":"form-group"}>
                         <label> mobile </label>
                         <input className="form-control"  value = {this.state.contact.mobile} onChange = {this.handleMobileChange.bind(this)}/>
                     </div>
 
-                    <div className="form-group">
-                        {this.state.fileUploadMessage}
-                        <div className="image-block">
-                            <img src={this.state.imagePreviewUrl} alt="Red dot" />
-                        </div>
-                        <input className="fileInput"
-                            type="file"
-                            onChange={this.handleImageChange.bind(this)}
-                        />
-                    </div>
 
-                    <input className="btn-green" type="submit" value="Add Contact" />
+
+                    <input className="btn-green btn-submit"   type="submit" value="Update Contact" disabled ={!this.state.formValid && !this.state.isDirty} />
                 </form>
             </div>
         );

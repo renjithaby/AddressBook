@@ -4,14 +4,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import './SignIn.css';
 
 
 class SignInPage extends React.Component {
 
     constructor(props){
         super(props);
-        console.log( this.props.myRoute);
          this.state = {username :"username", password :"password"};
     }
 
@@ -34,8 +33,9 @@ class SignInPage extends React.Component {
 
     render() {
         return (
-            <div className =" form-block ">
-                <form  onSubmit = {this.handleSignIn.bind(this)} >
+            <div className =" signin form-block container ">
+               <span className= "error-message"> {this.props.login.errorMessage} </span>
+                <form className="contact-item " onSubmit = {this.handleSignIn.bind(this)} >
                     <div className="form-group">
                         <label> User Name </label>
                         <input className="form-control"  value={this.state.username} onChange={this.handleUserNameChange.bind(this)}/>
@@ -46,7 +46,7 @@ class SignInPage extends React.Component {
                         <input className="form-control"  value={this.state.password} onChange={this.handlePasswordChange.bind(this)}/>
                     </div>
 
-                    <input className="btn-green" type="submit" value="SignIn" />
+                    <input className="btn-green btn-submit" type="submit" value="SignIn" />
                 </form>
             </div>
         );

@@ -9,6 +9,7 @@ class HomePage extends React.Component {
 
     constructor(props){
         super(props);
+        this.state = {search :"search"};
     }
 
     componentWillMount(props){
@@ -22,18 +23,31 @@ class HomePage extends React.Component {
     }
 
 
+    handleSearchChange(event){
+        this.setState({search: event.target.value});
+    }
+
     render() {
         return (
 	            <div className="home-page container">
-                {this.props.user.contacts ?
-                    <ul className="row">
-                        {this.props.user.contacts.map((item) =>
-                                <li key={item.id} >
-                                    <ContactItem  item ={item}/>
-                                </li>
-                        )}
-                    </ul> :null}
-	            </div>
+                    <form>
+                        <div className="form-group search">
+                           <span>Search Contact</span>
+                            <input className="form-control"  value={this.state.search} onChange={this.handleSearchChange.bind(this)}/>
+                        </div>
+                    </form>
+                    <hr/>
+                    <div className="contact-list">
+                        {this.props.user.contacts ?
+                            <ul className="row">
+                                {this.props.user.contacts.map((item) =>
+                                        <li key={item.id} >
+                                            <ContactItem  item ={item}/>
+                                        </li>
+                                )}
+                            </ul> :null}
+                     </div>
+                </div>
          );
     }
 }

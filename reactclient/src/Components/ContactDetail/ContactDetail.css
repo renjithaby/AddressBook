@@ -1,10 +1,5 @@
 .contact-detail hr {
-    display: block;
-    height: 1px;
-    border: 0;
     border-top: 1px solid deepskyblue;
-    margin: 0 0;
-    padding: 0;
 }
 
 .contact-detail .title{
@@ -15,7 +10,6 @@
  }
 
 .contact-detail .btn-green{
-     background-color: green;
      min-width:5em;
  }
 

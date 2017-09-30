@@ -3,7 +3,7 @@
  */
 import history from '../History';
 
-const UserDataReducer = (state = { user:{}}, action = {}) => {
+const UserDataReducer = (state = { user:{}, login:{errorMessage:""}}, action = {}) => {
 
     switch (action.type){
 
@@ -62,20 +62,21 @@ const UserDataReducer = (state = { user:{}}, action = {}) => {
     }
 
     function loginSuccess(state, action){
-         history.push('/home');
-        return {...state, user : action.data.user  };
+        history.push('/home');
+        login:{errorMessage:""}
+        return {...state, user : action.data.user,login:{errorMessage:""}  };
     }
 
     function loginFailed(state, action){
-        return {...state};
+        return {...state, login:{errorMessage:action.data.message} };
     }
 
     function loadUserFromTokenFailed(state,action){
+        history.push('/signin');
         return state;
     }
 
     function loadUserFromTokenSuccess(state, action){
-        console.log(action.data.user);
         return {...state, user : action.data.user  };
     }
 
@@ -103,7 +104,7 @@ const UserDataReducer = (state = { user:{}}, action = {}) => {
     }
 
     function updateContactSuccess(state,action){
-        //history.push('/home');
+        history.push('/home');
         return {...state, user : action.data.user  };
     }
 

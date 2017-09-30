@@ -50,10 +50,18 @@ class EditContactPage extends React.Component {
     }
 
     isDirty(){
-        let isDirty = true;
+        let isDirty = false;
         let contact = this.props.user.contacts.find(o => o.id == this.props.match.params.id);
         isDirty = !this.isShallowEqual(contact, this.state.contact);
+        if(isDirty ){
+            this.setState({isDirty:isDirty});
+            return;
+        }
+
+        isDirty = (this.state.file !=="");
         this.setState({isDirty:isDirty});
+        return;
+
     }
 
      validator(){
@@ -146,7 +154,7 @@ class EditContactPage extends React.Component {
                 file: file,
                 imagePreviewUrl: reader.result,
                 uploadedImage:file.name
-            },this.validator());
+            },this.validator);
         }
         if(file && file.size>MAX_FILE_SIZE){
             file = null;
@@ -156,7 +164,7 @@ class EditContactPage extends React.Component {
                 imagePreviewUrl:"",
                 uploadedImage:"",
                 fileUploadErrorMessage : " max file size limit is " + MAX_FILE_SIZE+"bytes"
-            },this.validator());
+            },this.validator);
         }
         if(file) {
             reader.readAsDataURL(file)
@@ -208,7 +216,7 @@ class EditContactPage extends React.Component {
 
 
 
-                    <input className="btn-green btn-submit"   type="submit" value="Update Contact" disabled ={!this.state.formValid && !this.state.isDirty} />
+                    <input className="btn-green btn-submit"   type="submit" value="Update Contact" disabled ={!this.state.formValid || !this.state.isDirty} />
                 </form>
             </div>
         );

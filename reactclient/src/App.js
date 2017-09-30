@@ -28,8 +28,8 @@ class App extends Component {
 
           <Header currentUser = {this.props.userData.user} appName= {"Thoughts!"} handleLogout = {this.props.handleLogout.bind(this)} {...this.props}/>
           <Switch>
-          <Route path = "/signup"  component = {()=>  <SignUpPage  registerUser = {this.props.registerUser}  />} />
-          <Route path = "/signin"  component = {()=>  <SignInPage  loginUser = {this.props.loginUser} />} />
+          <Route path = "/signup"  component = {()=>  <SignUpPage  registerUser = {this.props.registerUser}   />} />
+          <Route path = "/signin"  component = {()=>  <SignInPage  loginUser = {this.props.loginUser} login ={this.props.userData.login}/>} />
           <Route path = "/contact/:id"  component = {()=>  <ContactDetailPage  user = {this.props.userData.user} deleteContact = {this.props.deleteContact} {...this.props} />} />
           <Route path = "/editcontact/:id"  component = {()=>  <EditContactPage  user = {this.props.userData.user} updateContact ={this.props.updateContact} {...this.props} />} />
           <Route path = "/addcontact"  component = {()=>  <AddContactPage user= {this.props.userData.user}  addNewContact = {this.props.addNewContact}   />} />

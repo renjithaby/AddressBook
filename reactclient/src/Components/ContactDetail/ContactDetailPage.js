@@ -38,7 +38,7 @@ class ContactDetailPage extends React.Component {
             <div className="contact-detail container">
 
                 <div className="panel-body image-block">
-                    <img  src = {apiHost + this.state.contact.profilePicUrl} />
+                    <img  src = {apiHost + this.state.contact.profilePicUrl} alt="profile pic" />
                 </div>
 
                 <div className="field">

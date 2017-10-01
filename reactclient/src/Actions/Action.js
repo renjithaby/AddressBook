@@ -3,9 +3,7 @@
  */
 
 import dataApi from '../Api/dataApi';
-import history from '../History';
 
-export var usersList = [];
 
 export const registrationSuccess = (data) => {
     return {
@@ -88,9 +86,10 @@ export const deleteContactSuccess = (data) => {
 export const deleteContactFailed = (data) => {
     return {
         type: "DELETE_CONTACT_FAILED",
-        data:data
+        data: data
     };
 }
+
 
 
 
@@ -100,7 +99,11 @@ export function loginUser(usr) {
         return dataApi.login(usr).then(data => {
 
             if(data.result === "failed"){
-                dispatch(loginFailed(data));
+                if(data.message === "EXPIRED_TOKEN"){
+                    dispatch(handleLogout(data));
+                }else {
+                    dispatch(loginFailed(data));
+                }
 
             }else {
                 resultData.token = data.token;
@@ -120,7 +123,11 @@ export function registerUser(usr) {
     return function(dispatch) {
         return dataApi.register(usr).then(data => {
             if(data.result ==="failed"){
-                dispatch(registrationFailed(data));
+                if(data.message === "EXPIRED_TOKEN"){
+                    dispatch(handleLogout(data));
+                }else {
+                    dispatch(registrationFailed(data));
+                }
             }else {
                 dispatch(registrationSuccess());
             }
@@ -135,7 +142,11 @@ export function loadUserFromToken(token) {
         var resultData = {};
         return dataApi.loadUserFromToken(token).then(data => {
             if(data.result === "failed"){
-                dispatch(handleLogout());
+                if(data.message === "EXPIRED_TOKEN"){
+                    dispatch(handleLogout(data));
+                }else {
+                    dispatch(handleLogout());
+                }
             }else {
                 resultData.user = data.user;
                 dispatch(loadUserFromTokenSuccess(resultData));
@@ -150,12 +161,14 @@ export function loadUserFromToken(token) {
 
 export function addNewContact(formData) {
     return function(dispatch) {
-        var resultData = {};
         return dataApi.addNewContact(formData).then(data => {
             if(data.result === "failed"){
-                dispatch(addNewContactFailed(data));
+                if(data.message === "EXPIRED_TOKEN"){
+                    dispatch(handleLogout(data));
+                }else {
+                    dispatch(addNewContactFailed(data));
+                }
             }else {
-                //resultData.user = data.user;
                 dispatch(addNewContactSuccess({user:data}));
 
             }
@@ -167,12 +180,14 @@ export function addNewContact(formData) {
 
 export function updateContact(formData) {
     return function(dispatch) {
-        var resultData = {};
         return dataApi.updateContact(formData).then(data => {
             if(data.result === "failed"){
-                dispatch(updateContactFailed(data));
+                if(data.message === "EXPIRED_TOKEN"){
+                    dispatch(handleLogout(data));
+                }else {
+                    dispatch(updateContactFailed(data));
+                }
             }else {
-                //resultData.user = data.user;
                 dispatch(updateContactSuccess({user:data}));
 
             }
@@ -185,12 +200,14 @@ export function updateContact(formData) {
 
 export function deleteContact(contactId) {
     return function(dispatch) {
-        var resultData = {};
         return dataApi.deleteContact(contactId).then(data => {
             if(data.result === "failed"){
-                dispatch(deleteContactFailed(data));
+                if(data.message === "EXPIRED_TOKEN"){
+                    dispatch(handleLogout(data));
+                }else {
+                    dispatch(deleteContactFailed(data));
+                }
             }else {
-                //resultData.user = data.user;
                 dispatch(deleteContactSuccess({user:data}));
 
             }

@@ -48,7 +48,6 @@ const UserDataReducer = (state = { user:{}, login:{errorMessage:""}}, action = {
 
         default:
             return state;
-            break;
     }
 
 
@@ -63,7 +62,6 @@ const UserDataReducer = (state = { user:{}, login:{errorMessage:""}}, action = {
 
     function loginSuccess(state, action){
         history.push('/home');
-        login:{errorMessage:""}
         return {...state, user : action.data.user,login:{errorMessage:""}  };
     }
 

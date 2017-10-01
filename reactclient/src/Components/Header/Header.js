@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import history from '../../History';
 import './Header.css';
 const LoggedOutView = props => {
         return (
@@ -57,8 +56,6 @@ class Header extends React.Component {
 
     constructor(props){
         super(props);
-
-
     }
 
     componentWillMount(){

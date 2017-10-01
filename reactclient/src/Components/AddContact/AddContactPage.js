@@ -2,10 +2,9 @@
  * Created by rabby on 27/09/17.
  */
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './AddContact.css';
 
-export const MAX_FILE_SIZE = 3000;
+export const MAX_FILE_SIZE = 2000;// bytes
 class AddContactPage extends React.Component {
 
     constructor(props){
@@ -130,7 +129,7 @@ class AddContactPage extends React.Component {
                 <div className = "form-group profile-image">
                     <label> Image </label>
                     <div>
-                        <img src={this.state.imagePreviewUrl} alt="" />
+                        <img src={this.state.imagePreviewUrl} alt="image" />
                     </div>
                     <div>
                         <span> {this.state.uploadedImage} </span>

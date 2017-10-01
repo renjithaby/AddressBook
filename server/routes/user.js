@@ -3,24 +3,23 @@ var router = express.Router();
 var jwt    = require('jsonwebtoken');
 var multer = require('multer');
 
+
+//multer storage
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/uploads')
     },
     filename: function (req, file, cb) {
-        console.log(file);
         if(file) {
             cb(null, file.fieldname + '-' + Date.now()+file.mimetype.replace("image/","."))
         }else{
 
         }
-        //
     }
 });
-
-//var upload = multer({ dest: './public/uploads' });
-
 var upload = multer({ storage:storage }).single('profilePic');
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   var app = req.app;
@@ -29,19 +28,14 @@ router.get('/', function(req, res, next) {
 
 
 
-/* POST to Add User Service */
-
+/* POST to  remove user Service */
 router.post('/removeuser', function (req, res) {
-
-
 
     // Set our internal DB variable
     var db = req.db;
-    console.log(req.query.id);
-    //res.redirect("/userlist1");
+
     // Get our form values. These rely on the "name" attributes
     var id = req.query.id;
-
 
     // Set our collection
     var collection = db.get('usercollection');
@@ -50,7 +44,7 @@ router.post('/removeuser', function (req, res) {
     collection.remove({"_id": id}, function (err, doc) {
         if (err) {
             // If it failed, return error
-            res.send("There was a problem adding the information to the database.");
+            res.send({ result: "failed",message:"There was a problem adding the information to the database."});
         }
         else {
             // And forward to success page
@@ -59,38 +53,36 @@ router.post('/removeuser', function (req, res) {
     });
 });
 
-
+/* POSt to addcontact service */
 router.post('/addcontact',function (req, res) {
     upload(req, res, function (err) {
         if (err) {
-            console.log("errorr is thrown");
+            console.log("error is thrown");
             return
         }
 
-        console.log(req.file);
         // Set our internal DB variable
         var db = req.db;
         var userId = req.body.userid;
+        //create the new contact
         var newContact = {};
         newContact.id = Date.now().toString();
         newContact.name = req.body.name;
         newContact.address = req.body.address;
         newContact.email = req.body.email;
         newContact.mobile = req.body.mobile;
-        newContact.profilePicUrl = req.file ? req.file.path.replace("public","") : "/uploads/default.png";
+        newContact.profilePicUrl = req.file ? req.file.path.replace("public","") : "uploads/default.png";
 
         // Set our collection
          var collection = db.get('usercollection');
-
-
+        //update the user contacts with new contact
          collection.update(
             {_id: userId},
             {$push: {contacts: newContact}}
-         , function (err, doc) {
+         ,function (err, doc) {
              if (err) {
-                 console.log("failed.....");
                  // If it failed, return error
-                 res.send({result :"failed",detail:"There was a problem adding the information to the database."});
+                 res.send({result :"failed",message:"There was a problem adding the information to the database."});
              }
              else {
                  collection.find({
@@ -98,21 +90,18 @@ router.post('/addcontact',function (req, res) {
                  },
                  function (err, doc) {
                      if (err) {
-                         console.log("doceroor");
                          // If it failed, return error
                          res.send({result: "failed", detail:"Incorrect information."});
                      }
                      else {
-                         console.log(".....response....");
                          if (doc.length > 0) {
                             res.send(doc[0]);
-                            //res.redirect("addaddress");
                          } else {
                             res.send({result: "failed", detail:"wrong id"});
                          }
                      }
                  });
-            }
+             }
          });
 
     });
@@ -120,23 +109,16 @@ router.post('/addcontact',function (req, res) {
 });
 
 
-/*db.students.update(
-    { _id: 4, "grades.grade": 85 },
-    { $set: { "grades.$.std" : 6 } }
-)*/
-
-
+/* POST to updatecontact service */
 router.post('/updatecontact', function (req, res) {
 
-   // req.body = {loginid:"59a67d114c0b230f4a639548",addressid:1504093882072,name :"renjith", currentaddress:"renjithadd"};
     upload(req, res, function (err) {
         if (err) {
             console.log("errorr is thrown");
             return
         }
 
-
-        // Set our internal DB variable
+    // Set our internal DB variable
     var db = req.db;
 
     // Get our form values. These rely on the "name" attributes
@@ -147,61 +129,53 @@ router.post('/updatecontact', function (req, res) {
     newContact.address = req.body.address;
     newContact.email = req.body.email;
     newContact.mobile = req.body.mobile;
-    newContact.profilePicUrl = req.file ? req.file.path.replace("public","") : "/uploads/default.png";
-   console.log("hellooo");
-        console.log(newContact);
+        if(req.file){
+            newContact.profilePicUrl = req.file.path.replace("public/","")
+        }else if(req.body.profilePicUrl){
+            newContact.profilePicUrl =  req.body.profilePicUrl;
+        }else{
+            newContact.profilePicUrl =  "uploads/default.png";
+        }
+
     // Set our collection
     var collection = db.get('usercollection');
 
-
+    // update the specific contact
     collection.update(
         {_id: userId,"contacts.id":newContact.id},
         { $set: { "contacts.$" : newContact } }
-       , function (err, doc) {
+       ,function (err, doc) {
             if (err) {
-                console.log("failed.....");
                 // If it failed, return error
-                res.send("There was a problem adding the information to the database.");
+                res.send({result :"failed",message:"There was a problem adding the information to the database."});
             }
             else {
-                console.log("success.....");
-               console.log("doc[0]..........");
-                console.log(doc);
                 collection.find({
                         "_id" : userId
                     },
-                    function (err, doc) {
-                        if (err) {
-                            console.log("doceroor");
-                            // If it failed, return error
-                            res.send("Incorrect information.");
+                function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        res.send({result :"failed",message:"There was a problem adding the information to the database."});
+                    }
+                    else {
+                        if (doc.length > 0) {
+                            res.send(doc[0]);
+                            //res.redirect("addaddress");
+                        } else {
+                            res.send({result :"failed",message:"There was a problem adding the information to the database."});
                         }
-                        else {
-                            console.log(".....response....");
-                            if (doc.length > 0) {
-                                res.send(doc[0]);
-                                //res.redirect("addaddress");
-                            } else {
-                                res.send({result: "failed"});
-                            }
-                        }
-                    });
+                    }
+                });
             }
         });
 
     });
 });
 
-/*
-db.survey.update(
-    { },
-    { $pull: { results: { score: 8 , item: "B" } } },
-    { multi: true }
-)
-*/
+/* POST to deletecontact service */
 router.post('/deletecontact', function (req, res) {
 
-    //req.body = {loginid:"59a67d114c0b230f4a639548",addressid:1504093406891};
     // Set our internal DB variable
     var db = req.db;
 
@@ -212,16 +186,14 @@ router.post('/deletecontact', function (req, res) {
     // Set our collection
     var collection = db.get('usercollection');
 
-
     collection.update(
         {_id:userId},
         {$pull:{contacts:{id :contactId}}},
         { multi: true }
         , function (err, doc) {
             if (err) {
-                console.log("failed.....");
                 // If it failed, return error
-                res.send("There was a problem adding the information to the database.");
+                res.send({result :"failed",message:"There was a problem adding the information to the database."});
             }
             else {
                 collection.find({
@@ -230,23 +202,24 @@ router.post('/deletecontact', function (req, res) {
                     function (err, doc) {
                         if (err) {
                             // If it failed, return error
-                            res.send("Incorrect information.");
+                            res.send({result :"failed",message:"There was a problem adding the information to the database."});
                         }
                         else {
                             if (doc.length > 0) {
                                 res.send(doc[0]);
                             } else {
-                                res.send({result: "failed"});
+                                res.send({result :"failed",message:"There was a problem adding the information to the database."});
                             }
                         }
-                    });
+                    }
+                );
             }
-        });
-
+        }
+    );
 });
 
 
-
+/* POST to loadUserFromToken service */
 router.post('/loadUserFromToken', function (req, res) {
     var db = req.db;
 

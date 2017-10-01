@@ -26,7 +26,7 @@ class ContactItem extends React.Component {
                 <div onClick = {this.showContact.bind(this)} className="contact-item col-xs-12 col-sm-6 ">
                     <div className="panel panel-default" >
                         <div className="panel-body image-block">
-                            <img  src = {apiHost + this.props.item.profilePicUrl} />
+                            <img  src = {apiHost + this.props.item.profilePicUrl} alt="profile pic" />
                             <span className="name"> {this.props.item.name} </span>
                         </div>
                     </div>

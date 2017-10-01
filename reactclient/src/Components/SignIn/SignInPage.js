@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './SignIn.css';
 
 
@@ -40,12 +39,10 @@ class SignInPage extends React.Component {
                         <label> User Name </label>
                         <input className="form-control"  value={this.state.username} onChange={this.handleUserNameChange.bind(this)}/>
                     </div>
-
                     <div className="form-group">
                         <label> Password </label>
                         <input className="form-control"  value={this.state.password} onChange={this.handlePasswordChange.bind(this)}/>
                     </div>
-
                     <input className="btn-green btn-submit" type="submit" value="SignIn" />
                 </form>
             </div>

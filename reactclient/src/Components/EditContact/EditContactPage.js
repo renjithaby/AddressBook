@@ -5,11 +5,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './EditContact.css';
-export const apiHost = "http://localhost:3000";
-export const MAX_FILE_SIZE = 23000;
+export const apiHost = "http://localhost:3000/";
+export const MAX_FILE_SIZE = 2000; //bytes
 class EditContactPage extends React.Component {
 
     constructor(props) {
+
         super(props);
         this.state = {
             contact: {_id: "", name: "", address: "", email: "", mobile: "", profilePicUrl: ""},
@@ -136,9 +137,8 @@ class EditContactPage extends React.Component {
 
     updateContact(event) {
         event.preventDefault();
-        console.log(event.target);
         const form = document.getElementById("add-contact");
-        let contact = {id :this.state.contact.id,name :this.state.contact.name, address :this.state.contact.address, email :this.state.contact.email, mobile :this.state.contact.mobile};
+        let contact = {id :this.state.contact.id,name :this.state.contact.name, address :this.state.contact.address, email :this.state.contact.email, mobile :this.state.contact.mobile ,profilePicUrl :this.state.contact.profilePicUrl};
         this.props.updateContact({userId:this.props.user._id,profilePicFile:this.state.file,contact:contact});
     }
 
@@ -182,7 +182,7 @@ class EditContactPage extends React.Component {
                 <div className = "form-group profile-image">
                     <label> Image </label>
                     <div>
-                        {this.state.imagePreviewUrl ? <img src= {this.state.imagePreviewUrl} alt="" />:<img  src = {apiHost + this.state.contact.profilePicUrl} />}
+                        {this.state.imagePreviewUrl ? <img src= {this.state.imagePreviewUrl} alt="profile pic" />:<img  src = {apiHost + this.state.contact.profilePicUrl} />}
                     </div>
                     <div>
                         <span> {this.state.uploadedImage} </span>

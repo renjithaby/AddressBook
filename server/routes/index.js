@@ -39,12 +39,11 @@ router.post('/adduser', function (req, res) {
         else {
             // And forward to success page
             res.send({result: "success"});
-            //router.post('/authenticate'
         }
     });
 });
 
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+// route to authenticate a user
 router.post('/authenticate', function(req, res) {
     console.log("req.body.name");
     //console.log(req.body.name);
@@ -77,8 +76,7 @@ router.post('/authenticate', function(req, res) {
                     expiresIn: 1440 // expires in 24 hours
                 });
                 var decoded = jwt.verify(token, app.get('superSecret'));
-                console.log("decoded........");
-                console.log(decoded);
+
                 // return the information including token as JSON
                 res.json({
                     success: true,
@@ -101,8 +99,8 @@ router.get('/userlist', function (req, res) {
          res.render('userlist', {
          "userlist" : docs
          });
-
-        //res.send({"userlist": docs});
     });
 });
+
+
 module.exports = router;

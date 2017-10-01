@@ -68,14 +68,12 @@ class dataApi {
     static addNewContact(data) {
 
         let formData = new FormData();
-       // console.log(this.state.file);
         formData.append('profilePic',data.profilePicFile?data.profilePicFile:null);
         formData.append('userid',data.userId);
         formData.append('name',data.contact.name);
         formData.append('address',data.contact.address);
         formData.append('email',data.contact.email);
         formData.append('mobile',data.contact.mobile);
-        console.log(formData.getAll('profilePic'));
         const request = new Request(apiHost+'user/addcontact',{
             method: 'POST',
             headers: new Headers({
@@ -95,15 +93,14 @@ class dataApi {
     static updateContact(data) {
 
         let formData = new FormData();
-        // console.log(this.state.file);
         formData.append('profilePic',data.profilePicFile?data.profilePicFile:null);
+        formData.append('profilePicUrl',data.contact.profilePicUrl);
         formData.append('userid',data.userId);
         formData.append('contactId',data.contact.id);
         formData.append('name',data.contact.name);
         formData.append('address',data.contact.address);
         formData.append('email',data.contact.email);
         formData.append('mobile',data.contact.mobile);
-        console.log(formData.getAll('profilePic'));
         const request = new Request(apiHost+'user/updatecontact',{
             method: 'POST',
             headers: new Headers({
